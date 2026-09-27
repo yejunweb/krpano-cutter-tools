@@ -1,0 +1,38 @@
+{
+    "name": "krpano-cutter-tools",
+    "version": "1.0.0",
+    "description": "krpano 全景图前端切图工具（纯浏览器 WebGL/Canvas）",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "development": "./src/index.ts",
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "node ./node_modules/typescript/bin/tsc",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm run build"
+    },
+    "engines": {
+        "node": ">=14"
+    },
+    "keywords": [
+        "krpano",
+        "panorama",
+        "tile",
+        "cube",
+        "webgl"
+    ],
+    "license": "MIT",
+    "devDependencies": {
+        "typescript": "5.8.3"
+    }
+}
