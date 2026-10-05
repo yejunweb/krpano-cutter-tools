@@ -1,7 +1,7 @@
-import { getWebGLContext } from '../canvas'
-import type { CutterContext } from '../context'
-import type { FaceBitmaps } from '../types'
-import { convertToCubeFacesCPU } from './cpu'
+import { getWebGLContext } from '../canvas';
+import type { CutterContext } from '../context';
+import type { FaceBitmaps } from '../types';
+import { convertToCubeFacesCPU } from './cpu';
 
 /**
  * 创建WebGL着色器
@@ -15,18 +15,18 @@ function createShader(
     type: number,
     source: string
 ): WebGLShader | null {
-    const shader = gl.createShader(type)
-    if (!shader) return null
-    gl.shaderSource(shader, source)
-    gl.compileShader(shader)
+    const shader = gl.createShader(type);
+    if (!shader) return null;
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error:', gl.getShaderInfoLog(shader))
-        gl.deleteShader(shader)
-        return null
+        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
     }
 
-    return shader
+    return shader;
 }
 
 /**
@@ -41,17 +41,19 @@ function createProgram(
     vertexShader: WebGLShader,
     fragmentShader: WebGLShader
 ): WebGLProgram | null {
-    const program = gl.createProgram()
-    gl.attachShader(program, vertexShader)
-    gl.attachShader(program, fragmentShader)
-    gl.linkProgram(program)
+    const program = gl.createProgram();
+    if (!program) return null;
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error('Program link error:', gl.getProgramInfoLog(program))
-        return null
+        console.error('Program link error:', gl.getProgramInfoLog(program));
+        return null;
     }
 
-    return program
+    return program;
 }
 
 // 顶点着色器：将顶点坐标转换为纹理坐标
@@ -62,7 +64,7 @@ const vertexShaderSource = `
         gl_Position = vec4(a_position, 0.0, 1.0);  // 设置顶点位置
         v_texCoord = (a_position + 1.0) / 2.0;    // 将[-1,1]转换为[0,1]纹理坐标
       }
-    `
+    `;
 
 // 片段着色器：核心转换逻辑（球面→立方体）
 const fragmentShaderSource = `
@@ -116,7 +118,7 @@ const fragmentShaderSource = `
         // 从全景图纹理采样颜色（GPU自动进行双线性插值）
         gl_FragColor = texture2D(u_texture, vec2(texX, texY));
       }
-    `
+    `;
 
 /**
  * 使用WebGL GPU加速将球面全景图转换为六个立方体面
@@ -136,13 +138,13 @@ export async function convertToCubeFacesWebGL(
     srcHeight: number,
     faceSize: number
 ): Promise<FaceBitmaps> {
-    const faces = {} as FaceBitmaps
+    const faces = {} as FaceBitmaps;
 
     // ==================== 初始化WebGL上下文 ====================
-    const canvas = document.createElement('canvas')
-    canvas.width = faceSize
-    canvas.height = faceSize
-    const gl = getWebGLContext(canvas)
+    const canvas = document.createElement('canvas');
+    canvas.width = faceSize;
+    canvas.height = faceSize;
+    const gl = getWebGLContext(canvas);
 
     // 如果获取WebGL上下文失败，降级到CPU版本
     if (!gl) {
@@ -152,32 +154,32 @@ export async function convertToCubeFacesWebGL(
             srcWidth,
             srcHeight,
             faceSize
-        )
+        );
     }
 
     // ==================== 创建并编译着色器 ====================
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource)
+    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(
         gl,
         gl.FRAGMENT_SHADER,
         fragmentShaderSource
-    )
+    );
     if (!vertexShader || !fragmentShader) {
-        throw new Error('WebGL 着色器编译失败')
+        throw new Error('WebGL 着色器编译失败');
     }
 
-    const program = createProgram(gl, vertexShader, fragmentShader)
+    const program = createProgram(gl, vertexShader, fragmentShader);
     if (!program) {
-        throw new Error('WebGL 程序链接失败')
+        throw new Error('WebGL 程序链接失败');
     }
 
-    const positionLocation = gl.getAttribLocation(program, 'a_position')
-    const textureLocation = gl.getUniformLocation(program, 'u_texture')
-    const faceLocation = gl.getUniformLocation(program, 'u_face')
+    const positionLocation = gl.getAttribLocation(program, 'a_position');
+    const textureLocation = gl.getUniformLocation(program, 'u_texture');
+    const faceLocation = gl.getUniformLocation(program, 'u_face');
 
     // ==================== 创建顶点缓冲区 ====================
-    const positionBuffer = gl.createBuffer()
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     // 定义两个三角形组成的矩形（覆盖整个canvas）
     gl.bufferData(
         gl.ARRAY_BUFFER,
@@ -185,17 +187,17 @@ export async function convertToCubeFacesWebGL(
             -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
         ]),
         gl.STATIC_DRAW
-    )
+    );
 
     // ==================== 创建并配置纹理 ====================
-    const texture = gl.createTexture()
-    gl.bindTexture(gl.TEXTURE_2D, texture)
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
     // 设置纹理环绕模式（边缘拉伸）
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     // 设置纹理过滤模式（双线性插值）
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     // 将ImageBitmap上传到纹理
     gl.texImage2D(
         gl.TEXTURE_2D,
@@ -204,47 +206,47 @@ export async function convertToCubeFacesWebGL(
         gl.RGBA,
         gl.UNSIGNED_BYTE,
         sourceBitmap
-    )
+    );
 
     // 检查纹理上传是否成功（源图过大时 texImage2D 会静默失败，导致采样全黑）
-    const texError = gl.getError()
+    const texError = gl.getError();
     if (texError !== gl.NO_ERROR) {
-        gl.deleteTexture(texture)
-        gl.deleteBuffer(positionBuffer)
-        gl.deleteProgram(program)
-        gl.deleteShader(vertexShader)
-        gl.deleteShader(fragmentShader)
+        gl.deleteTexture(texture);
+        gl.deleteBuffer(positionBuffer);
+        gl.deleteProgram(program);
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShader);
         throw new Error(
             `WebGL 纹理上传失败 (error: ${texError})，源图尺寸可能超出 GPU 限制`
-        )
+        );
     }
 
     // ==================== 设置WebGL渲染状态 ====================
-    gl.useProgram(program)
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-    gl.enableVertexAttribArray(positionLocation)
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
-    gl.activeTexture(gl.TEXTURE0)
-    gl.bindTexture(gl.TEXTURE_2D, texture)
-    gl.uniform1i(textureLocation, 0)
-    gl.viewport(0, 0, faceSize, faceSize)
-    gl.clearColor(0, 0, 0, 1)
+    gl.useProgram(program);
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.enableVertexAttribArray(positionLocation);
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.uniform1i(textureLocation, 0);
+    gl.viewport(0, 0, faceSize, faceSize);
+    gl.clearColor(0, 0, 0, 1);
 
     // ==================== 渲染六个立方体面 ====================
     for (let i = 0; i < ctx.faces.length; i++) {
-        const face = ctx.faces[i]!
-        gl.uniform1i(faceLocation, i)
-        gl.clear(gl.COLOR_BUFFER_BIT)
-        gl.drawArrays(gl.TRIANGLES, 0, 6)
-        faces[face] = await createImageBitmap(canvas)
+        const face = ctx.faces[i]!;
+        gl.uniform1i(faceLocation, i);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        faces[face] = await createImageBitmap(canvas);
     }
 
     // ==================== 清理WebGL资源 ====================
-    gl.deleteTexture(texture)
-    gl.deleteBuffer(positionBuffer)
-    gl.deleteProgram(program)
-    gl.deleteShader(vertexShader)
-    gl.deleteShader(fragmentShader)
+    gl.deleteTexture(texture);
+    gl.deleteBuffer(positionBuffer);
+    gl.deleteProgram(program);
+    gl.deleteShader(vertexShader);
+    gl.deleteShader(fragmentShader);
 
-    return faces
+    return faces;
 }
