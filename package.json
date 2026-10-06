@@ -1,6 +1,6 @@
 {
     "name": "krpano-cutter-tools",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "纯浏览器 krpano 切图工具，支持全景 cube 与高清矩阵 flat 的 multires 瓦片",
     "type": "module",
     "main": "./dist/index.js",
