@@ -5,6 +5,29 @@
 - **cube**：等距柱状全景 → 立方体 multires 瓦片
 - **flat**：平面图（高清矩阵）→ flat multires 瓦片（路径与 Krpano 官方一致）
 
+[![npm package](https://img.shields.io/npm/v/krpano-cutter-tools.svg)](https://www.npmjs.com/package/krpano-cutter-tools)
+[![npm downloads](https://img.shields.io/npm/dm/krpano-cutter-tools.svg)](https://www.npmjs.com/package/krpano-cutter-tools)
+
+## 安装
+
+### npm
+
+```bash
+npm install krpano-cutter-tools
+```
+
+### yarn
+
+```bash
+yarn add krpano-cutter-tools
+```
+
+### pnpm
+
+```bash
+pnpm add krpano-cutter-tools
+```
+
 对外为两个异步函数，无需 `new`：
 
 ```ts
