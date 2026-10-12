@@ -4,6 +4,9 @@ import type { CubeFace, FaceBitmaps } from './types';
 
 /**
  * 生成立方体条带预览图（3×2 CUBESTRIP，体积小、krpano cube 模式解码更快）
+ *
+ * @param ctx - 切图运行时配置
+ * @param faceBitmaps - 六个立方体面
  */
 export async function generateCubeStripPreview(
     ctx: CutterContext,
@@ -35,7 +38,12 @@ export async function generateCubeStripPreview(
     return canvasToBlob(canvas, 'image/jpeg', ctx.previewQuality);
 }
 
-/** 列表缩略图（等距柱状小图） */
+/**
+ * 列表缩略图（等距柱状小图）
+ *
+ * @param ctx - 切图运行时配置
+ * @param bitmap - 源全景图
+ */
 export async function generateThumb(
     ctx: CutterContext,
     bitmap: ImageBitmap
@@ -53,7 +61,12 @@ export async function generateThumb(
     return canvasToBlob(canvas, 'image/jpeg', ctx.thumbQuality);
 }
 
-/** flat 预览图：整图等比缩放到最长边 1024（对应 preview.jpg） */
+/**
+ * flat 预览图：整图等比缩放到最长边 1024（对应 preview.jpg）
+ *
+ * @param ctx - 切图运行时配置
+ * @param bitmap - 源平面图
+ */
 export async function generateFlatPreview(
     ctx: CutterContext,
     bitmap: ImageBitmap
@@ -75,7 +88,12 @@ export async function generateFlatPreview(
     return canvasToBlob(canvas, 'image/jpeg', ctx.previewQuality);
 }
 
-/** flat 列表缩略图：等比放入 thumb 框（contain，对齐 Krpano 官方 thumbsize≈240） */
+/**
+ * flat 列表缩略图：等比放入 thumb 框（contain，对齐 Krpano 官方 thumbsize≈240）
+ *
+ * @param ctx - 切图运行时配置
+ * @param bitmap - 源平面图
+ */
 export async function generateFlatThumb(
     ctx: CutterContext,
     bitmap: ImageBitmap

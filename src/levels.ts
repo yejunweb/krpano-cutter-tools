@@ -13,6 +13,10 @@ function alignLevelSize(ctx: CutterContext, size: number): number {
 
 /**
  * 低层级用更低 JPEG 质量，优先保证 l1/l2 快速解码完成，缩放时少卡顿
+ *
+ * @param ctx - 切图运行时配置
+ * @param levelIndex - 层级编号，l1 为最低分辨率
+ * @param totalLevels - 层级总数
  */
 export function getJpegQualityForLevel(
     ctx: CutterContext,
@@ -40,7 +44,12 @@ function toSquareLevel(
     };
 }
 
-/** 分析多级分辨率层级（krpano 约定 l1=最低分辨率，lN=最高分辨率） */
+/**
+ * 分析多级分辨率层级（krpano 约定 l1=最低分辨率，lN=最高分辨率）
+ *
+ * @param ctx - 切图运行时配置
+ * @param faceSize - 立方体面边长
+ */
 export function analyzeLevels(
     ctx: CutterContext,
     faceSize: number
@@ -77,6 +86,10 @@ export function analyzeLevels(
  * 分析 flat 多级分辨率层级（对齐 Krpano 官方 levelstep=2，保持宽高比）
  *
  * krpano 约定 l1=最低分辨率，lN=最高分辨率
+ *
+ * @param ctx - 切图运行时配置
+ * @param srcWidth - 原图宽度
+ * @param srcHeight - 原图高度
  */
 export function analyzeFlatLevels(
     ctx: CutterContext,
@@ -125,6 +138,9 @@ export function analyzeFlatLevels(
  * 生成 krpano multires 配置字符串（短语法 + URL 模板）
  *
  * 格式：tilesize,level1,level2,...#url
+ *
+ * @param ctx - 切图运行时配置
+ * @param levels - 已分析的层级列表（l1 在前）
  */
 export function buildMultiresStr(
     ctx: CutterContext,
@@ -145,6 +161,9 @@ function flatLevelToken(level: LevelConfig): string {
  *
  * 格式：tilesize,level1,level2,...#url
  * 展示端无 # 时用固定模板；有 # 时取后半段 url
+ *
+ * @param ctx - 切图运行时配置
+ * @param levels - 已分析的层级列表（l1 在前）
  */
 export function buildFlatMultiresStr(
     ctx: CutterContext,

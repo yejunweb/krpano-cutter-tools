@@ -14,6 +14,12 @@ function pathPrefixOf(sceneId: string, dirName: string): string {
  * 1. scene - 完整场景配置（包含view、preview、image标签）
  * 2. tileImage - 带层级的<image>标签（适合多级分辨率）
  * 3. shortTileImage - 简化的<image><cube>格式（适合单级分辨率）
+ *
+ * @param tileSize - 瓦片边长
+ * @param file - 源文件，用于场景标题
+ * @param dirName - 目录名（文件名不含扩展名）
+ * @param sceneId - 场景 ID，用于路径前缀
+ * @param levels - 已分析的层级列表
  */
 export function generateXmlCode(
     tileSize: number,
@@ -72,6 +78,12 @@ export function generateXmlCode(
  * 1. scene - 完整场景配置（包含view、preview、image标签）
  * 2. tileImage - 带层级的<image>标签（适合多级分辨率）
  * 3. shortTileImage - 简化的<flat multires="...">格式（与客户端展示端一致）
+ *
+ * @param tileSize - 瓦片边长
+ * @param file - 源文件，用于场景标题
+ * @param dirName - 目录名（文件名不含扩展名）
+ * @param sceneId - 场景 ID，用于路径前缀
+ * @param levels - 已分析的层级列表
  */
 export function generateFlatXmlCode(
     tileSize: number,

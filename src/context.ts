@@ -10,18 +10,30 @@ import type {
 
 /** 切图流水线各模块共享的运行时配置（内部使用） */
 export interface CutterContext {
-    tileSize: number; // 瓦片边长（像素），默认 512
-    maxCubeSize: number; // 立方体面最大边长，默认 2048（flat 不用）
-    jpegQuality: number; // 最高层级瓦片 JPEG 质量 0–1，默认 0.82
-    previewFaceSize: number; // 预览条带每面像素（3×2 布局），默认 256
-    previewQuality: number; // 预览图 JPEG 质量，默认 0.72
-    thumbWidth: number; // 列表缩略图宽度
-    thumbHeight: number; // 列表缩略图高度
-    thumbQuality: number; // 缩略图 JPEG 质量，默认 0.7
-    onLog: LogCallback; // 切图日志：(message) => void
-    onProgress: ProgressCallback; // 切图进度：(percent, processed, total) => void
-    faces: readonly CubeFace[]; // l/f/r/b/u/d 六个立方体面
-    sceneId: string; // 场景 ID，用于 OSS / XML 路径前缀
+    /** 瓦片边长（像素），默认 512 */
+    tileSize: number;
+    /** 立方体面最大边长，默认 2048（flat 不用） */
+    maxCubeSize: number;
+    /** 最高层级瓦片 JPEG 质量 0–1，默认 0.82 */
+    jpegQuality: number;
+    /** 预览条带每面像素（3×2 布局），默认 256 */
+    previewFaceSize: number;
+    /** 预览图 JPEG 质量，默认 0.72 */
+    previewQuality: number;
+    /** 列表缩略图宽度 */
+    thumbWidth: number;
+    /** 列表缩略图高度 */
+    thumbHeight: number;
+    /** 缩略图 JPEG 质量，默认 0.7 */
+    thumbQuality: number;
+    /** 切图日志 */
+    onLog: LogCallback;
+    /** 切图进度 */
+    onProgress: ProgressCallback;
+    /** l/f/r/b/u/d 六个立方体面 */
+    faces: readonly CubeFace[];
+    /** 场景 ID，用于 OSS / XML 路径前缀 */
+    sceneId: string;
 }
 
 function resolveBase(
@@ -58,7 +70,11 @@ function resolveBase(
     };
 }
 
-/** 由 cube 选项构建运行时上下文（供各子模块使用） */
+/**
+ * 由 cube 选项构建运行时上下文（供各子模块使用）
+ *
+ * @param options - cube 切图选项
+ */
 export function createCubeContext(
     options: CubeTilesOptions = {}
 ): CutterContext {
@@ -73,7 +89,11 @@ export function createCubeContext(
     };
 }
 
-/** 由 flat 选项构建运行时上下文（thumb 默认最长边约 240 的 16:9） */
+/**
+ * 由 flat 选项构建运行时上下文（thumb 默认最长边约 240 的 16:9）
+ *
+ * @param options - flat 切图选项
+ */
 export function createFlatContext(
     options: FlatTilesOptions = {}
 ): CutterContext {

@@ -130,6 +130,12 @@ const fragmentShaderSource = `
  * 4. 为六个立方体面分别渲染到canvas
  *
  * WebGL优势：GPU并行计算，速度比CPU快10-50倍
+ *
+ * @param ctx - 切图运行时配置
+ * @param sourceBitmap - 等距柱状全景图
+ * @param srcWidth - 源图宽度
+ * @param srcHeight - 源图高度
+ * @param faceSize - 立方体面边长
  */
 export async function convertToCubeFacesWebGL(
     ctx: CutterContext,

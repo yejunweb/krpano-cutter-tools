@@ -12,6 +12,11 @@ import { convertToCubeFacesWebGL } from './webgl';
  * - 不支持WebGL时自动降级到CPU版本
  *
  * 立方体面尺寸：faceSize = min(floor(srcWidth / 4), maxCubeSize)
+ *
+ * @param ctx - 切图运行时配置
+ * @param sourceBitmap - 等距柱状全景图
+ * @param srcWidth - 源图宽度
+ * @param srcHeight - 源图高度
  */
 export async function convertToCubeFaces(
     ctx: CutterContext,

@@ -11,6 +11,12 @@ import type { CubeFace, LevelConfig, TileCanvas, TileData } from './types';
  * 2. 最后一行/列的瓦片可能小于 tileSize
  * 3. Promise.all 并行生成所有瓦片
  * 4. 优先使用 OffscreenCanvas
+ *
+ * @param ctx - 切图运行时配置
+ * @param faceBitmap - 当前立方体面
+ * @param level - 当前分辨率层级
+ * @param face - 面标识（l/f/r/b/u/d）
+ * @param totalLevels - 层级总数，用于按层调整 JPEG 质量
  */
 export async function generateTilesForFace(
     ctx: CutterContext,
@@ -63,6 +69,11 @@ export async function generateTilesForFace(
  * 3. Promise.all 并行生成所有瓦片
  * 4. 优先使用 OffscreenCanvas
  * 命名无 face：l{level}_{row}_{col}.jpg
+ *
+ * @param ctx - 切图运行时配置
+ * @param levelBitmap - 当前层级的平面图
+ * @param level - 当前分辨率层级
+ * @param totalLevels - 层级总数，用于按层调整 JPEG 质量
  */
 export async function generateTilesForFlatLevel(
     ctx: CutterContext,

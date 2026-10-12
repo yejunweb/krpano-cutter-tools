@@ -60,6 +60,12 @@ export function getCubeDirection(
  * 3. 对每个面的每个像素，计算其在全景图上的对应位置
  * 4. 使用双线性插值采样颜色
  * 5. 将结果写入新的ImageBitmap
+ *
+ * @param ctx - 切图运行时配置
+ * @param sourceBitmap - 等距柱状全景图
+ * @param srcWidth - 源图宽度
+ * @param srcHeight - 源图高度
+ * @param faceSize - 立方体面边长
  */
 export async function convertToCubeFacesCPU(
     ctx: CutterContext,

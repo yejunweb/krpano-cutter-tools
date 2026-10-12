@@ -1,6 +1,10 @@
 import type { TileCanvas } from './types';
 
-/** 获取 WebGL 上下文（兼容 webgl / experimental-webgl） */
+/**
+ * 获取 WebGL 上下文（兼容 webgl / experimental-webgl）
+ *
+ * @param canvas - 用于探测的 canvas
+ */
 export function getWebGLContext(
     canvas: HTMLCanvasElement
 ): WebGLRenderingContext | null {
@@ -53,6 +57,8 @@ export function getMaxTextureSize(): number {
  *
  * File 继承 Blob，直接 createImageBitmap 即可；
  * 避免 fetch(blobUrl) 在生产环境 CSP / 大文件场景下 Failed to fetch
+ *
+ * @param file - 待解码的图片文件
  */
 export async function decodeImage(file: File) {
     const bitmap = await createImageBitmap(file, {
@@ -71,6 +77,10 @@ export async function decodeImage(file: File) {
  *
  * 使用 canvas 的 drawImage 方法进行高质量缩放，
  * 启用 imageSmoothing 以避免缩放后出现锯齿。
+ *
+ * @param sourceBitmap - 源图
+ * @param targetWidth - 目标宽度
+ * @param targetHeight - 目标高度
  */
 export async function resizeBitmap(
     sourceBitmap: ImageBitmap,
@@ -103,6 +113,10 @@ export async function resizeBitmap(
  * 兼容两种canvas类型：
  * - HTMLCanvasElement：toBlob()（回调方式）
  * - OffscreenCanvas：convertToBlob()（Promise方式）
+ *
+ * @param canvas - HTMLCanvasElement 或 OffscreenCanvas
+ * @param type - MIME 类型，如 image/jpeg
+ * @param quality - 编码质量，0–1
  */
 export async function canvasToBlob(
     canvas: TileCanvas,
